@@ -21,16 +21,15 @@
     "@supabase/postgrest-js": "^0.36.0",
     "@supabase/supabase-js": "^1.30.0",
     "axios": "^0.25.0",
+    "axios-retry": "^3.2.4",
     "cheerio": "^1.0.0-rc.10",
     "date-fns-tz": "^1.2.2",
     "got": "^12.0.1",
     "puppeteer": "^13.3.0"
   },
   "devDependencies": {
-    "eslint": "^8.8.0",
     "eslint-config-cretia": "0.0.7",
-    "prettier": "^2.5.1",
-    "prettier-config-cretia": "^1.0.2"
+    "prettier-config-cretia": "1.0.2"
   },
   "eslintConfig": {
     "extends": "eslint-config-cretia"
