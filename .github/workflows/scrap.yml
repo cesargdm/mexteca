@@ -1,20 +1,21 @@
-name: Scrapper
+name: "Scrapper"
 
 on:
   push:
-    branches: [main]
-  schedule: "0 */8 * * *"
+    branches: ["main"]
+  schedule:
+    - cron: "0 */8 * * *"
 
 jobs:
   deploy-webapp:
-    name: Scrap and update DB
+    name: "Scrap and update DB"
     runs-on: "ubuntu-latest"
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: 16
       - name: "Install dependencies"
         run: npm ci
       - name: "Run script"
