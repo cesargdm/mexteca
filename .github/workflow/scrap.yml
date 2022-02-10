@@ -1,7 +1,8 @@
 name: Scrapper
 
-# cron every 8 hours
 on:
+  push:
+    branches: [main]
   schedule: "0 */8 * * *"
 
 jobs:
