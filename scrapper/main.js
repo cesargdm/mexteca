@@ -34,14 +34,13 @@ async function scrapData() {
 
   let cache
   try {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('No cache')
+    if (process.env.NODE_ENV !== 'production') {
+      cache = await new Promise((res, rej) =>
+        fs.readFile('./cache.html', 'utf8', (err, data) =>
+          err ? rej(err) : res(data),
+        ),
+      )
     }
-    cache = await new Promise((res, rej) =>
-      fs.readFile('./cache.html', 'utf8', (err, data) =>
-        err ? rej(err) : res(data),
-      ),
-    )
   } catch (err) {
     console.log('No cache', err)
   }
