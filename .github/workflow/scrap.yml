@@ -1,0 +1,23 @@
+name: Scrapper
+
+# cron every 8 hours
+on:
+  schedule: "0 */8 * * *"
+
+jobs:
+  deploy-webapp:
+    name: Scrap and update DB
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: "Install dependencies"
+        run: npm ci
+      - name: "Run script"
+        run: npm start
+        env:
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}

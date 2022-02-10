@@ -1,0 +1,39 @@
+{
+  "name": "cinemexquense-scrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=\"production\" node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cesargdm/cinemexquense-scrapper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cesargdm/cinemexquense-scrapper/issues"
+  },
+  "homepage": "https://github.com/cesargdm/cinemexquense-scrapper#readme",
+  "dependencies": {
+    "@supabase/postgrest-js": "^0.36.0",
+    "@supabase/supabase-js": "^1.30.0",
+    "axios": "^0.25.0",
+    "cheerio": "^1.0.0-rc.10",
+    "date-fns-tz": "^1.2.2",
+    "got": "^12.0.1",
+    "puppeteer": "^13.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-cretia": "0.0.7",
+    "prettier": "^2.5.1",
+    "prettier-config-cretia": "^1.0.2"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-cretia"
+  },
+  "prettier": "prettier-config-cretia"
+}
