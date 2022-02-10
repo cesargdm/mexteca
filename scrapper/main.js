@@ -34,7 +34,7 @@ async function scrapData() {
 
   let cache
   try {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'production') {
       throw new Error('No cache')
     }
     cache = await new Promise((res, rej) =>
