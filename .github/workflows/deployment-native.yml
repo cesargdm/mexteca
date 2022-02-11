@@ -1,20 +1,20 @@
-name: Native Build
+name: Native App Deployment
 
 on:
   push:
     branches: [main]
     paths:
       # Only run deploy if the version changed
-      - "native-app/app.json"
+      - "app/app.json"
 
 jobs:
   build-ios:
-    name: "Build iOS"
+    name: "Build and Deploy iOS"
     runs-on: ubuntu-latest
     timeout-minutes: 40
     defaults:
       run:
-        working-directory: ./native-app
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -45,12 +45,12 @@ jobs:
 
   # Android build and deploy
   build-android:
-    name: "Build Android"
+    name: "Build and Deploy Android"
     runs-on: ubuntu-latest
     timeout-minutes: 40
     defaults:
       run:
-        working-directory: ./native-app
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1

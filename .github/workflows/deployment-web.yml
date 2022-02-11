@@ -1,0 +1,23 @@
+name: Web App Deployment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+
+jobs:
+  build-and-deploy-web:
+    name: "Build and Deploy Web App"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: "Build and Deploy Web App"
+        run: yarn deploy

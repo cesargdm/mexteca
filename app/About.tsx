@@ -30,9 +30,7 @@ function AboutScreen() {
           flexDirection: 'row',
           padding: 5,
         }}
-        onPress={() =>
-          Linking.openURL('https://github.com/cesargdm/cinemexquense')
-        }
+        onPress={() => Linking.openURL('https://github.com/cesargdm/mexteca')}
       >
         <Text style={{ fontWeight: '700', marginRight: 5 }}>Github</Text>
         <Github fill="black" stroke={0} />
