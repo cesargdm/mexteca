@@ -16,14 +16,16 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cesargdm.cinemexquense"
+      "bundleIdentifier": "com.cesargdm.cinemexquense",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.cesargdm.cinemexquense"
+      "package": "com.cesargdm.cinemexquense",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
