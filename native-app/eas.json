@@ -13,6 +13,14 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-services.json"
+      },
+      "ios": {
+        "ascAppId": "1609527146",
+        "appleTeamId": "AUR7UR6M72"
+      }
+    }
   }
 }
