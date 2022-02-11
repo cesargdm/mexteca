@@ -1,0 +1,22 @@
+{
+  "files": {
+    "app.js": "/mexteca/static/js/app.d8c5aee2.chunk.js",
+    "app.js.map": "/mexteca/static/js/app.d8c5aee2.chunk.js.map",
+    "runtime~app.js": "/mexteca/static/js/runtime~app.398c2092.js",
+    "runtime~app.js.map": "/mexteca/static/js/runtime~app.398c2092.js.map",
+    "static/js/2.8189854c.chunk.js": "/mexteca/static/js/2.8189854c.chunk.js",
+    "static/js/2.8189854c.chunk.js.map": "/mexteca/static/js/2.8189854c.chunk.js.map",
+    "favicon-16.png": "/mexteca/favicon-16.png",
+    "favicon-32.png": "/mexteca/favicon-32.png",
+    "favicon.ico": "/mexteca/favicon.ico",
+    "index.html": "/mexteca/index.html",
+    "manifest.json": "/mexteca/manifest.json",
+    "serve.json": "/mexteca/serve.json",
+    "static/js/2.8189854c.chunk.js.LICENSE.txt": "/mexteca/static/js/2.8189854c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.398c2092.js",
+    "static/js/2.8189854c.chunk.js",
+    "static/js/app.d8c5aee2.chunk.js"
+  ]
+}
