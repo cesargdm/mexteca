@@ -44,7 +44,7 @@ function AboutScreen() {
       </View>
       <View style={{ marginVertical: 10 }}>
         <Text style={{ fontWeight: '700', fontSize: 18 }}>Créditos</Text>
-        <Text>Cineteca mexiquense</Text>
+        <Text>Cineteca Mexiquense</Text>
         <Text>The Movie Database</Text>
       </View>
     </View>
