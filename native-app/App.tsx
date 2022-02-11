@@ -13,14 +13,12 @@ import {
   ActivityIndicator,
   useWindowDimensions,
 } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   NavigationContainer,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
 import { Star, Info, X } from 'react-native-feather'
-import { createClient } from '@supabase/supabase-js'
 import { formatInTimeZone } from 'date-fns-tz'
 import { startOfDay, endOfDay } from 'date-fns/esm'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -34,19 +32,13 @@ import {
   startOfMonth,
   subMonths,
 } from 'date-fns'
+import { Provider } from 'react-supabase'
+
+import { registerForPushNotificationsAsync } from './src/utils'
+import { client } from './src/utils/supabase'
 
 import MovieScreen from './Movie'
 import AboutScreen from './About'
-import { registerForPushNotificationsAsync } from './src/utils'
-
-const PROJECT_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6aGJla2hvbnN1aGFwdG14Y2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ0MjgzMzcsImV4cCI6MTk2MDAwNDMzN30.8ZNeKaJZsPvHs9UFYPT4AM2CB4LHyZIHh5pSPuuvXks'
-const PROJECT_URL = 'https://yzhbekhonsuhaptmxckk.supabase.co'
-
-const client = createClient(PROJECT_URL, PROJECT_KEY, {
-  localStorage: AsyncStorage as any,
-  detectSessionInUrl: false,
-})
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -274,8 +266,14 @@ function HomeScreen() {
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             {new Array(Math.round(presentation.movie.tmdbRating / 2))
               .fill(null)
-              .map(() => (
-                <Star width={12.5} height={12.5} stroke="none" fill="gold" />
+              .map((_, index) => (
+                <Star
+                  key={index}
+                  width={12.5}
+                  height={12.5}
+                  stroke="none"
+                  fill="gold"
+                />
               ))}
           </View>
         </View>
@@ -390,41 +388,43 @@ export default function Navigation() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            options={{
-              headerTintColor: 'black',
-            }}
-            name="HomeScreen"
-            component={HomeScreen}
-          />
-          <Stack.Screen
-            options={{
-              headerTransparent: true,
-              headerTintColor: 'white',
-              title: '',
-              headerBackTitle: '',
-              headerBackTitleVisible: false,
-            }}
-            name="MovieScreen"
-            component={MovieScreen}
-          />
-          <Stack.Screen
-            options={({ navigation }) => ({
-              title: 'About',
-              presentation: 'modal',
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <X color="black" height={30} width={30} />
-                </TouchableOpacity>
-              ),
-            })}
-            name="AboutScreen"
-            component={AboutScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider value={client}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{
+                headerTintColor: 'black',
+              }}
+              name="HomeScreen"
+              component={HomeScreen}
+            />
+            <Stack.Screen
+              options={{
+                headerTransparent: true,
+                headerTintColor: 'white',
+                title: '',
+                headerBackTitle: '',
+                headerBackTitleVisible: false,
+              }}
+              name="MovieScreen"
+              component={MovieScreen}
+            />
+            <Stack.Screen
+              options={({ navigation }) => ({
+                title: 'Mexteca',
+                presentation: 'modal',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <X color="black" height={30} width={30} />
+                  </TouchableOpacity>
+                ),
+              })}
+              name="AboutScreen"
+              component={AboutScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </>
   )
 }

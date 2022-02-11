@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Cinemexquense",
+    "name": "Mexteca",
     "slug": "cinemexquense",
     "privacy": "public",
     "version": "1.0.0",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.cesargdm.cinemexquense",
-      "buildNumber": "2"
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.cesargdm.cinemexquense",
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -8,23 +8,14 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { WebView } from 'react-native-webview'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient } from '@supabase/supabase-js'
 import { useRoute } from '@react-navigation/native'
 
-const PROJECT_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6aGJla2hvbnN1aGFwdG14Y2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ0MjgzMzcsImV4cCI6MTk2MDAwNDMzN30.8ZNeKaJZsPvHs9UFYPT4AM2CB4LHyZIHh5pSPuuvXks'
-const PROJECT_URL = 'https://yzhbekhonsuhaptmxckk.supabase.co'
-
-const client = createClient(PROJECT_URL, PROJECT_KEY, {
-  localStorage: AsyncStorage as any,
-  detectSessionInUrl: false,
-})
+import { client } from './src/utils/supabase'
 
 function MovieScreen() {
   const route = useRoute()
-
-  const [{ data, error, loading }, setState] = useState<any>({
+  const movieId = (route.params as any)?.id
+  const [{ data }, setState] = useState<any>({
     data: {
       title: (route.params as any)?.title,
       posterUrl: (route.params as any)?.posterUrl,
@@ -38,7 +29,6 @@ function MovieScreen() {
       setState({ error: null, data: null, loading: true })
 
       try {
-        console.log('PARAMS', route.params)
         const { data, error } = await client
           .from('movies')
           .select(
@@ -57,7 +47,7 @@ function MovieScreen() {
             )
             `,
           )
-          .eq('id', (route.params as any)?.id)
+          .eq('id', movieId)
           .single()
 
         if (error) {
@@ -90,7 +80,7 @@ function MovieScreen() {
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundColor: 'black',
+              backgroundColor: 'rgba(0,0,0,0.3)',
               paddingTop: 50,
             }}
           />
@@ -109,8 +99,15 @@ function MovieScreen() {
           </Text>
         </ImageBackground>
         <View style={{ padding: 10 }}>
-          <Text style={{ color: 'black' }}>{data?.director?.name}</Text>
-          <Text style={{ color: 'black' }}>{data?.duration}</Text>
+          <Text style={{ color: 'black' }}>
+            <Text style={{ fontWeight: '800' }}>Dirección</Text>{' '}
+            {data?.director?.name}
+          </Text>
+          <Text style={{ color: 'black' }}>
+            <Text style={{ fontWeight: '800' }}>Duración</Text> {data?.duration}{' '}
+            min
+          </Text>
+          <Text>Clasificación</Text>
           <View
             style={{
               backgroundColor: 'black',
@@ -132,21 +129,26 @@ function MovieScreen() {
               {data?.classification}
             </Text>
           </View>
-          <Text style={{ color: 'black' }}>{data?.tmdbRating}</Text>
+          {/* <Text style={{ color: 'black' }}>{data?.tmdbRating}</Text> */}
         </View>
-        <Text
-          style={{
-            fontWeight: '700',
-            color: 'black',
-            padding: 10,
-            fontSize: 18,
-          }}
-        >
-          Description
-        </Text>
-        <Text style={{ color: 'black', paddingHorizontal: 10 }}>
-          {data?.description}
-        </Text>
+
+        {data?.description ? (
+          <>
+            <Text
+              style={{
+                fontWeight: '700',
+                color: 'black',
+                padding: 10,
+                fontSize: 18,
+              }}
+            >
+              Description
+            </Text>
+            <Text style={{ color: 'black', paddingHorizontal: 10 }}>
+              {data.description}
+            </Text>
+          </>
+        ) : null}
 
         {data?.trailerUrl ? (
           <>
@@ -167,17 +169,35 @@ function MovieScreen() {
             />
           </>
         ) : null}
-        <Text
-          style={{
-            fontWeight: '700',
-            color: 'black',
-            padding: 10,
-            fontSize: 18,
-          }}
-        >
-          Presentations
-        </Text>
-        {/* Calendar */}
+
+        {/* <View style={{ marginTop: 10 }}>
+          <Text
+            style={{
+              fontWeight: '700',
+              color: 'black',
+              padding: 10,
+              fontSize: 18,
+            }}
+          >
+            Presentaciones
+          </Text>
+          <Text style={{ color: 'red' }}>{JSON.stringify(all, null, 10)}</Text>
+          <View>
+            <View
+              style={{
+                borderTopWidth: 1,
+                borderColor: '#ddd',
+                padding: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text>Jueves 18, 10:00AM</Text>
+              <Text>Sala 1</Text>
+            </View>
+          </View>
+        </View> */}
       </SafeAreaView>
     </ScrollView>
   )

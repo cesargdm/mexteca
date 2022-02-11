@@ -3,6 +3,8 @@ name: "Scrapper"
 on:
   push:
     branches: ["main"]
+    paths:
+      - "scrapper/**"
   schedule:
     - cron: "0 */8 * * *"
 
