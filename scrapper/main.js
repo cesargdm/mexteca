@@ -3,14 +3,14 @@ const { createClient } = require('@supabase/supabase-js')
 const axiosRetry = require('axios-retry')
 const axios = require('axios')
 
-axiosRetry(axios, { retries: 5, retryDelay: axiosRetry.exponentialDelay })
-
 const { scrapWebsiteData } = require('./scrap')
 const { fetchMovieDetails } = require('./movies')
+const { sendNotifications } = require('./notifications')
 
-const PROJECT_KEY = process.env.SUPABASE_KEY
-
+const { SUPABASE_KEY } = process.env
 const PROJECT_URL = 'https://yzhbekhonsuhaptmxckk.supabase.co'
+
+axiosRetry(axios, { retries: 5, retryDelay: axiosRetry.exponentialDelay })
 
 /**
  * Save presentations data to Supabase while fetching and saving
@@ -84,7 +84,7 @@ function savePresentations({ client, presentations }) {
  */
 async function main() {
   try {
-    const client = createClient(PROJECT_URL, PROJECT_KEY)
+    const client = createClient(PROJECT_URL, SUPABASE_KEY)
 
     // Scrap main website page
     const presentations = await scrapWebsiteData(
@@ -101,6 +101,10 @@ async function main() {
     console.log(
       `Scrapped ${results.length} presentations\nInserted ${inserted} new presentations`,
     )
+    if (inserted > 0) {
+      // Send Expo Push Notifications to all users
+      sendNotifications({ client, insertedCount: inserted })
+    }
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err)

@@ -92,7 +92,6 @@ function MovieScreen() {
               height: '100%',
               backgroundColor: 'black',
               paddingTop: 50,
-              opacity: '0.5',
             }}
           />
           <Text
@@ -145,7 +144,9 @@ function MovieScreen() {
         >
           Description
         </Text>
-        <Text style={{ color: 'black' }}>{data?.description}</Text>
+        <Text style={{ color: 'black', paddingHorizontal: 10 }}>
+          {data?.description}
+        </Text>
 
         {data?.trailerUrl ? (
           <>

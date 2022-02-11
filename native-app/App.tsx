@@ -1,26 +1,32 @@
 import 'react-native-url-polyfill/auto'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
-  Image,
-  StyleSheet,
   Text,
-  FlatList,
   View,
-  useWindowDimensions,
-  ActivityIndicator,
+  FlatList,
   StatusBar,
-  Button,
+  StyleSheet,
+  RefreshControl,
+  ImageBackground,
   TouchableOpacity,
+  ActivityIndicator,
+  useWindowDimensions,
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import { Star, Info, X } from 'react-native-feather'
 import { createClient } from '@supabase/supabase-js'
 import { formatInTimeZone } from 'date-fns-tz'
 import { startOfDay, endOfDay } from 'date-fns/esm'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import * as Notifications from 'expo-notifications'
+import { Bell } from 'react-native-feather'
 import {
   addWeeks,
   endOfWeek,
@@ -31,6 +37,7 @@ import {
 
 import MovieScreen from './Movie'
 import AboutScreen from './About'
+import { registerForPushNotificationsAsync } from './src/utils'
 
 const PROJECT_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6aGJla2hvbnN1aGFwdG14Y2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ0MjgzMzcsImV4cCI6MTk2MDAwNDMzN30.8ZNeKaJZsPvHs9UFYPT4AM2CB4LHyZIHh5pSPuuvXks'
@@ -41,12 +48,36 @@ const client = createClient(PROJECT_URL, PROJECT_KEY, {
   detectSessionInUrl: false,
 })
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+})
+
 const Stack = createNativeStackNavigator()
 
 const now = new Date()
 
 function HomeScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation<any>()
+  const route = useRoute()
+  const [permissionStatus] = Notifications.usePermissions()
+
+  function registerForPushNotifications() {
+    registerForPushNotificationsAsync().then((token) => {
+      if (!token) return
+      client
+        .from('notificationSettings')
+        .insert({ token, all: true })
+        .then(({ data }) => {
+          if (data)
+            alert('Te avisaremos cuando se publiquen una nuevas funciones')
+          else alert('Hubo un problema al registrarte')
+        })
+    })
+  }
 
   const [selectedDate, setSelectedDate] = useState(startOfDay(now))
   const [{ data, error, loading }, setState] = useState<any>({
@@ -55,15 +86,20 @@ function HomeScreen() {
     loading: true,
   })
 
-  const { width } = useWindowDimensions()
+  let { width } = useWindowDimensions()
+  const maxWidth = Math.min(width, 800)
+  const numberOfColumns = Math.round(maxWidth / 200)
+  const posterWidth = maxWidth / numberOfColumns
 
   useEffect(() => {
     function onChange(_value: any, selectedDate: any) {
       setSelectedDate(startOfDay(selectedDate))
     }
 
+    const headerTitle = formatRelative(selectedDate, now)
+
     navigation.setOptions({
-      title: formatRelative(selectedDate, now),
+      headerTitle,
       headerLeft() {
         return (
           <TouchableOpacity onPress={() => navigation.navigate('AboutScreen')}>
@@ -77,7 +113,6 @@ function HomeScreen() {
             <DateTimePicker
               textColor="black"
               themeVariant="light"
-              // dateFormat="dayofweek"
               minimumDate={startOfMonth(subMonths(now, 1))}
               maximumDate={endOfWeek(addWeeks(now, 1))}
               value={selectedDate}
@@ -89,17 +124,16 @@ function HomeScreen() {
         )
       },
     })
-  }, [selectedDate])
+  }, [navigation, route, selectedDate])
 
-  useEffect(() => {
-    async function fetchData() {
-      setState({ error: null, data: null, loading: true })
+  const fetchData = useCallback(async () => {
+    setState({ error: null, data: null, loading: true })
 
-      try {
-        const { data, error } = await client
-          .from('presentations')
-          .select(
-            `
+    try {
+      const { data, error } = await client
+        .from('presentations')
+        .select(
+          `
           id,
           date,
           room,
@@ -113,26 +147,28 @@ function HomeScreen() {
             classification
           )
         `,
-          )
-          .gte('date', selectedDate.toISOString())
-          .lte('date', endOfDay(selectedDate).toISOString())
+        )
+        .order('date', { ascending: true })
+        .gte('date', selectedDate.toISOString())
+        .lte('date', endOfDay(selectedDate).toISOString())
 
-        if (error) {
-          console.log(error)
-          throw new Error('Could not get presentations')
-        }
-
-        setState({ data, loading: false, error })
-      } catch (error) {
+      if (error) {
         console.log(error)
-        setState((prev) => ({ ...prev, loading: false, error }))
+        throw new Error('Could not get presentations')
       }
-    }
 
+      setState({ data, loading: false, error })
+    } catch (error) {
+      console.log(error)
+      setState((prev: any) => ({ ...prev, loading: false, error }))
+    }
+  }, [selectedDate])
+
+  useEffect(() => {
     fetchData()
   }, [selectedDate])
 
-  function renderItem({ item: presentation }) {
+  function renderItem({ item: presentation }: any) {
     return (
       <TouchableOpacity
         onPress={() =>
@@ -142,7 +178,7 @@ function HomeScreen() {
             posterUrl: presentation.movie.posterUrl,
           })
         }
-        style={{ width: width / 2, padding: 10, paddingBottom: 20 }}
+        style={{ width: posterWidth, padding: 10, paddingBottom: 20 }}
       >
         <View
           style={{
@@ -152,21 +188,60 @@ function HomeScreen() {
             shadowRadius: 4,
           }}
         >
-          <Image
+          <ImageBackground
             style={{
               width: '100%',
-              height: width * 0.67,
+              height: posterWidth * 1.48,
               borderRadius: 5,
               borderWidth: 1,
               borderColor: '#ddd',
+              overflow: 'hidden',
             }}
-            // resizeMode="cover"
+            resizeMode="cover"
             source={{ uri: presentation.movie.posterUrl }}
-          />
+          >
+            <View
+              style={{
+                padding: 5,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                style={{
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  fontWeight: '800',
+                  fontSize: 10,
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  color: 'white',
+                  padding: 2,
+                  paddingHorizontal: 5,
+                }}
+              >
+                Sala {presentation.room}
+              </Text>
+              <Text
+                style={{
+                  fontWeight: '700',
+                  fontSize: 12,
+                  color: 'white',
+                }}
+              >
+                {formatInTimeZone(
+                  presentation.date,
+                  'America/Mexico_City',
+                  'h:mm aaa',
+                )}
+              </Text>
+            </View>
+          </ImageBackground>
         </View>
+
         <Text
           style={{
-            marginTop: 8,
+            marginTop: 5,
             color: 'black',
             width: '100%',
             fontWeight: '700',
@@ -203,25 +278,6 @@ function HomeScreen() {
                 <Star width={12.5} height={12.5} stroke="none" fill="gold" />
               ))}
           </View>
-        </View>
-        <View
-          style={{
-            marginTop: 4,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text style={{ color: 'black', fontWeight: '700' }}>
-            Sala {presentation.room}
-          </Text>
-          <Text style={{ color: 'black' }}>
-            {formatInTimeZone(
-              presentation.date,
-              'America/Mexico_City',
-              'h:mm aaa',
-            )}
-          </Text>
         </View>
       </TouchableOpacity>
     )
@@ -263,36 +319,70 @@ function HomeScreen() {
       <View
         style={[
           styles.container,
-          { justifyContent: 'center', alignItems: 'center', padding: 10 },
+          { justifyContent: 'center', alignItems: 'center', padding: 20 },
         ]}
       >
         <Text
           style={{
             color: 'black',
-            marginTop: 4,
-            fontWeight: '800',
             textAlign: 'center',
+            fontSize: 20,
+            fontWeight: '700',
+            opacity: 0.9,
           }}
         >
-          {
-            "We haven't found presentations for this day , you may want to check later"
-          }
+          No hemos encontrado funciones para este día, intenta revisar después
         </Text>
-        <Button title="Notify Me" onPress={() => undefined} />
+        {!permissionStatus?.granted ? (
+          <TouchableOpacity onPress={() => registerForPushNotifications()}>
+            <Text style={{ marginTop: 30, opacity: 0.6, fontWeight: '600' }}>
+              Si quieres también podemos avisarte
+            </Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Bell width={15} height={15} stroke="black" fill="black" />
+              <Text
+                style={{
+                  alignItems: 'center',
+                  fontWeight: '800',
+                  color: 'black',
+                  marginLeft: 5,
+                }}
+              >
+                recibir notificaciones
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </View>
     )
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <FlatList
-        numColumns={2}
+        refreshControl={
+          <RefreshControl onRefresh={() => fetchData()} refreshing={false} />
+        }
+        key={numberOfColumns}
+        numColumns={numberOfColumns}
         data={data}
         renderItem={renderItem}
+        columnWrapperStyle={{
+          maxWidth: 800,
+          margin: 0,
+          marginHorizontal: 'auto',
+        }}
         contentInsetAdjustmentBehavior="automatic"
         style={styles.container}
       />
-    </>
+    </View>
   )
 }
 
@@ -305,8 +395,6 @@ export default function Navigation() {
           <Stack.Screen
             options={{
               headerTintColor: 'black',
-              title: 'home',
-              headerTitle: 'Home',
             }}
             name="HomeScreen"
             component={HomeScreen}
