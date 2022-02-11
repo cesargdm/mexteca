@@ -1,6 +1,11 @@
-<h1 style="text-align:center">Cinemexquense</h1>
+<h1 style="text-align:center; width:100%">Mexteca</h1>
 
-> Website scrapper for [Cineteca Mexiquiense](http://cineteca.edomex.gob.mx/cartelera) and React native app for their movie listings
+<img source="https://github.com/cesargdm/mexteca/blob/main/app/web/logo.png?raw=true" />
+
+<quote style="text-align:center; max-width: 500px; margin: 0 auto;">React native app and website scraper for [Cineteca Mexiquiense](http://cineteca.edomex.gob.mx/cartelera) movie listings</quote>
+
+[![Native App](https://github.com/cesargdm/mexteca/actions/workflows/deployment-native.yml/badge.svg)](https://github.com/cesargdm/mexteca/actions/workflows/deployment-native.yml)
+[![Web App](https://github.com/cesargdm/mexteca/actions/workflows/deployment-web.yml/badge.svg)](https://github.com/cesargdm/mexteca/actions/workflows/deployment-web.yml)
 
 ## Motivation
 
@@ -10,3 +15,11 @@ for the available movies I see a problem, they publish the listings on their [Fa
 non-responsive, ugly to navigate, lacking of information website.
 
 So this is my solution to my personal problem.
+
+## 📱 App
+
+Check `app/README.md`
+
+## 🧑‍🍳 Scraper
+
+Check `scraper/README.md`

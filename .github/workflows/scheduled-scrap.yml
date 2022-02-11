@@ -1,10 +1,10 @@
-name: "Scrapper"
+name: "Scheduled Scraper"
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "scrapper/**"
+      - "scraper/**"
   schedule:
     - cron: "0 */8 * * *"
 
@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./scrapper
+        working-directory: ./scraper
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

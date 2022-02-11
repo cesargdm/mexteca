@@ -1,5 +1,5 @@
 {
-  "name": "mexteca-scrapper",
+  "name": "mexteca-scraper",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cesargdm/cinemexquense-scrapper.git"
+    "url": "git+https://github.com/cesargdm/cinemexquense-scraper.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cesargdm/cinemexquense-scrapper/issues"
+    "url": "https://github.com/cesargdm/cinemexquense-scraper/issues"
   },
-  "homepage": "https://github.com/cesargdm/cinemexquense-scrapper#readme",
+  "homepage": "https://github.com/cesargdm/cinemexquense-scraper#readme",
   "dependencies": {
     "@supabase/postgrest-js": "^0.36.0",
     "@supabase/supabase-js": "^1.30.0",
