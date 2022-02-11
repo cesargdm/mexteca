@@ -37,8 +37,8 @@ import { Provider } from 'react-supabase'
 import { registerForPushNotificationsAsync } from './src/utils'
 import { client } from './src/utils/supabase'
 
-import MovieScreen from './Movie'
-import AboutScreen from './About'
+import MovieScreen from './src/screens/Movie'
+import AboutScreen from './src/screens/About'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

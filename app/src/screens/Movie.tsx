@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { WebView } from 'react-native-webview'
 import { useRoute } from '@react-navigation/native'
 
-import { client } from './src/utils/supabase'
+import { client } from '../utils/supabase'
 
 function MovieScreen() {
   const route = useRoute()
