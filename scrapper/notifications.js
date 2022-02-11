@@ -5,7 +5,7 @@ const { EXPO_ACCESS_TOKEN } = process.env
 
 const expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
 
-function sendNotifications({ client, insertedCount }) {
+async function sendNotifications({ client, insertedCount }) {
   let { data: tokens } = await client
     .from('notificationSettings')
     .select('token')
@@ -26,7 +26,7 @@ function sendNotifications({ client, insertedCount }) {
     messages.push({
       to: token,
       sound: 'default',
-      body: `Hay ${insertedCount} nuevas presentaciones disponibles!`,
+      body: `Se encontraron ${insertedCount} nuevas presentaciones, revisa el app para más información`,
     })
   }
 

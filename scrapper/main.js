@@ -101,6 +101,7 @@ async function main() {
     console.log(
       `Scrapped ${results.length} presentations\nInserted ${inserted} new presentations`,
     )
+
     if (inserted > 0) {
       // Send Expo Push Notifications to all users
       sendNotifications({ client, insertedCount: inserted })
