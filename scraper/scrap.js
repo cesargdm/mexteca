@@ -123,7 +123,7 @@ async function scrapWebsiteData(url) {
 
     // retrieve the iso date for the presentation
     const day = parseInt(unparsedDay.trim())
-    const [, hourString, minuteString] = time.match(/([0-9]{1,2}):([0-9]{2})/)
+    const [, hourString, minuteString] = time.match(/([0-9]{1,2}):([0-9]{2})/) ?? []
     // parse values
     const year = Number(yearString)
     const country = localizedCountry
