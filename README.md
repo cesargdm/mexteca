@@ -16,6 +16,9 @@ non-responsive, ugly to navigate, lacking of information website.
 
 So this is my solution to my personal problem.
 
+## Cinetecas supported
+- [Cineteca mexiquense](https://cineteca.edomex.gob.mx)
+
 ## 📱 App
 
 Check `app/README.md`
