@@ -1,8 +1,8 @@
 <h1 style="text-align:center; width:100%">Mexteca</h1>
 
-<img source="https://github.com/cesargdm/mexteca/blob/main/app/web/logo.png?raw=true" />
+<img style="width:150px;height:150px;margin: 0 auto;" src="https://github.com/cesargdm/mexteca/blob/main/app/web/logo.png?raw=true" />
 
-<quote style="text-align:center; max-width: 500px; margin: 0 auto;">React native app and website scraper for [Cineteca Mexiquiense](http://cineteca.edomex.gob.mx/cartelera) movie listings</quote>
+<quote style="text-align:center; max-width: 500px; margin: 0 auto;">React native app and website scraper for Mexico's states Cinetecas movie listings</quote>
 
 [![Native App](https://github.com/cesargdm/mexteca/actions/workflows/deployment-native.yml/badge.svg)](https://github.com/cesargdm/mexteca/actions/workflows/deployment-native.yml)
 [![Web App](https://github.com/cesargdm/mexteca/actions/workflows/deployment-web.yml/badge.svg)](https://github.com/cesargdm/mexteca/actions/workflows/deployment-web.yml)
