@@ -143,7 +143,7 @@ async function scrapWebsiteData(url) {
     if (!localPresentationDate.getTime()) {
       // eslint-disable-next-line no-console
       console.log(
-        `Could not parse date for ${localizedTitle} ${localPresentationDate}`,
+        `Could not parse date for ${localizedTitle} ${localPresentationDate} with values: ${monthIndex} (month) ${day}, ${hour}:${minute}`,
       )
       return
     }
