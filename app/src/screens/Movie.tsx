@@ -92,17 +92,19 @@ function MovieScreen() {
               color: 'white',
               fontSize: 35,
               fontWeight: '600',
-              padding: 10,
+              padding: 20,
             }}
           >
             {data?.title}
           </Text>
         </ImageBackground>
-        <View style={{ padding: 10 }}>
-          <Text style={{ color: 'black' }}>
-            <Text style={{ fontWeight: '800' }}>Dirección</Text>{' '}
-            {data?.director?.name}
-          </Text>
+        <View style={{ padding: 20 }}>
+          {data?.director?.name && (
+            <Text style={{ color: 'black' }}>
+              <Text style={{ fontWeight: '800' }}>Dirección</Text>{' '}
+              {data?.director?.name}
+            </Text>
+          )}
           <Text style={{ color: 'black' }}>
             <Text style={{ fontWeight: '800' }}>Duración</Text> {data?.duration}{' '}
             min
@@ -133,30 +135,28 @@ function MovieScreen() {
         </View>
 
         {data?.description ? (
-          <>
+          <View style={{ padding: 20 }}>
             <Text
               style={{
                 fontWeight: '700',
                 color: 'black',
-                padding: 10,
+                paddingVertical: 10,
                 fontSize: 18,
               }}
             >
               Description
             </Text>
-            <Text style={{ color: 'black', paddingHorizontal: 10 }}>
-              {data.description}
-            </Text>
-          </>
+            <Text style={{ color: 'black' }}>{data.description}</Text>
+          </View>
         ) : null}
 
         {data?.trailerUrl ? (
-          <>
+          <View style={{ padding: 20 }}>
             <Text
               style={{
                 fontWeight: '700',
                 color: 'black',
-                padding: 10,
+                paddingVertical: 10,
                 fontSize: 18,
               }}
             >
@@ -167,9 +167,8 @@ function MovieScreen() {
               javaScriptEnabled={true}
               source={{ uri: data.trailerUrl }}
             />
-          </>
+          </View>
         ) : null}
-
         {/* <View style={{ marginTop: 10 }}>
           <Text
             style={{

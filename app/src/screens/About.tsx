@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StatusBar, Linking } from 'react-native'
-import { Github } from 'react-native-feather'
+import { Github, Coffee } from 'react-native-feather'
 
 function AboutScreen() {
   return (
@@ -15,26 +15,31 @@ function AboutScreen() {
           fontSize: 16,
         }}
       >
-        App no oficial de la Cineteca del Estado de México
+        App no oficial de las Cinetecas de México
       </Text>
-      <TouchableOpacity
-        style={{
-          borderWidth: 1,
-          borderRadius: 10,
-          borderColor: '#eee',
-          backgroundColor: '#f6f6f6',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignContent: 'center',
-          flexDirection: 'row',
-          padding: 5,
-        }}
-        onPress={() => Linking.openURL('https://github.com/cesargdm/mexteca')}
-      >
-        <Text style={{ fontWeight: '700', marginRight: 5 }}>Github</Text>
-        <Github fill="black" stroke={0} />
-      </TouchableOpacity>
+      <View style={{ alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{
+            borderWidth: 1,
+            borderRadius: 10,
+            borderColor: '#ddd',
+            backgroundColor: '#f6f6f6',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignContent: 'center',
+            flexDirection: 'row',
+            padding: 5,
+            maxWidth: 250,
+            marginBottom: 10,
+            width: '100%',
+          }}
+          onPress={() => Linking.openURL('https://github.com/cesargdm/mexteca')}
+        >
+          <Text style={{ fontWeight: '700', marginRight: 5 }}>Github</Text>
+          <Github fill="black" stroke={0} />
+        </TouchableOpacity>
+      </View>
       <View style={{ marginVertical: 10 }}>
         <Text style={{ fontWeight: '700', fontSize: 18 }}>Aviso</Text>
         <Text>
@@ -44,8 +49,8 @@ function AboutScreen() {
       </View>
       <View style={{ marginVertical: 10 }}>
         <Text style={{ fontWeight: '700', fontSize: 18 }}>Créditos</Text>
-        <Text>Cineteca Mexiquense</Text>
-        <Text>The Movie Database</Text>
+        <Text>- Cineteca Mexiquense</Text>
+        <Text>- The Movie Database</Text>
       </View>
     </View>
   )
