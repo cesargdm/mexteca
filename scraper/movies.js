@@ -29,7 +29,7 @@ async function fetchMovieDetails(movie, client) {
           `,
       )
       .eq('name', movie.directorName)
-      .maybeSingle()
+      .limit(1)
       .then(({ data, error }) => {
         if (error) {
           // eslint-disable-next-line no-console
@@ -38,7 +38,7 @@ async function fetchMovieDetails(movie, client) {
           return null
         }
 
-        return data?.id
+        return data?.[0]?.id
       })
 
     if (!movie.director) {

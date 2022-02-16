@@ -123,7 +123,8 @@ async function scrapWebsiteData(url) {
 
     // retrieve the iso date for the presentation
     const day = parseInt(unparsedDay.trim())
-    const [, hourString, minuteString] = time.match(/([0-9]{1,2}):([0-9]{2})/) ?? []
+    const [, hourString, minuteString] =
+      time.match(/([0-9]{1,2}):([0-9]{2})/) ?? []
 
     // parse values
     const year = Number(yearString)
@@ -157,6 +158,7 @@ async function scrapWebsiteData(url) {
     const room = generalPresentationsInfo.get(localizedTitle)
 
     presentations.push({
+      location: 'mexiquense',
       // We're passing the movie details in case we need to create a new one
       movie: {
         title,

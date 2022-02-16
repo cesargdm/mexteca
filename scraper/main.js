@@ -19,63 +19,77 @@ axiosRetry(axios, { retries: 5, retryDelay: axiosRetry.exponentialDelay })
  * @returns
  */
 function savePresentations({ client, presentations }) {
-  return Promise.allSettled(
-    presentations.map(async (presentation) => {
-      const { data: existingMovie } = await client
-        .from('movies')
-        .select(
-          `
+  const series = presentations.map(async (presentation) => {
+    const {
+      data: [existingMovie],
+      error: existingMovieError,
+    } = await client
+      .from('movies')
+      .select(
+        `
         id, title, year
         `,
-        )
-        .eq('title', presentation.movie.title)
-        .eq('year', presentation.movie.year)
-        .maybeSingle()
+      )
+      .eq('title', presentation.movie.title)
+      .eq('year', presentation.movie.year)
+      .limit(1)
 
-      const existingPresentation = existingMovie
+    // eslint-disable-next-line no-console
+    if (existingMovieError) console.log(existingMovieError)
+
+    const { data: existingPresentation, error: existingPresentationError } =
+      existingMovie
         ? await client
             .from('presentations')
             .select('id')
             .eq('date', presentation.date)
             .eq('movie', existingMovie?.id)
-            .maybeSingle()
-            .then(({ data }) => data?.id)
-        : null
+            .limit(1)
+            .then(({ data, error }) => ({ data: data?.[0]?.id, error }))
+        : {}
 
-      if (existingPresentation) {
-        // Resolve with 'EXISTING' so we know how many new saves we have
-        return Promise.resolve('EXISTING')
-      }
+    // eslint-disable-next-line no-console
+    if (existingPresentationError) console.log(existingPresentationError)
 
-      if (!existingMovie?.id) {
-        // eslint-disable-next-line no-console
-        console.log(
-          `No movie found, creating new record "${presentation.movie.title}"`,
-        )
-        const movie = await fetchMovieDetails(presentation.movie, client)
+    if (existingPresentation) {
+      // Resolve with 'EXISTING' so we know how many new saves we have
+      return Promise.resolve('EXISTING')
+    }
 
-        presentation.movie = await client
-          .from('movies')
-          .insert(movie)
-          .maybeSingle()
-          .then(({ data, error }) => {
-            if (error) {
-              // eslint-disable-next-line no-console
-              console.log('Could not insert movie', error)
-              throw new Error('Could not insert movie')
-            }
-            return data.id
-          })
-      } else {
-        presentation.movie = existingMovie.id
-      }
+    if (!existingMovie?.id) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `No movie found, creating new record "${presentation.movie.title}"`,
+      )
+      const movie = await fetchMovieDetails(presentation.movie, client)
 
-      return client.from('presentations').insert({
-        date: presentation.date,
-        movie: presentation.movie,
-        room: presentation.room,
-      })
-    }),
+      presentation.movie = await client
+        .from('movies')
+        .insert(movie)
+        .limit(1)
+        .then(({ data, error }) => {
+          if (error) {
+            // eslint-disable-next-line no-console
+            console.log('Could not insert movie', error)
+            throw new Error('Could not insert movie')
+          }
+          return data.id
+        })
+    } else {
+      presentation.movie = existingMovie.id
+    }
+
+    return client.from('presentations').insert({
+      date: presentation.date,
+      movie: presentation.movie,
+      room: presentation.room,
+    })
+  })
+
+  // Run one by one
+  return series.reduce(
+    (m, p) => m.then((v) => Promise.all([...v, p])),
+    Promise.resolve([]),
   )
 }
 
