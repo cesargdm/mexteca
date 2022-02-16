@@ -42,6 +42,7 @@ function savePresentations({ client, presentations }) {
         ? await client
             .from('presentations')
             .select('id')
+            .eq('location', presentation.location)
             .eq('date', presentation.date)
             .eq('movie', existingMovie?.id)
             .limit(1)
@@ -80,6 +81,7 @@ function savePresentations({ client, presentations }) {
     }
 
     return client.from('presentations').insert({
+      location: presentation.location,
       date: presentation.date,
       movie: presentation.movie,
       room: presentation.room,
