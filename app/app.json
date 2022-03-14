@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Mexteca",
-    "slug": "cinemexquense",
+    "slug": "mexteca",
     "privacy": "public",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cesargdm.cinemexquense",
+      "bundleIdentifier": "com.cesargdm.mexteca",
       "buildNumber": "5"
     },
     "android": {
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.cesargdm.cinemexquense",
+      "package": "com.cesargdm.mexteca",
       "versionCode": 5
     },
     "web": {
