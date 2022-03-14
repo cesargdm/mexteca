@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/mexteca/static/js/app.b78aaa28.chunk.js",
-    "app.js.map": "/mexteca/static/js/app.b78aaa28.chunk.js.map",
+    "app.js": "/mexteca/static/js/app.18fc775a.chunk.js",
+    "app.js.map": "/mexteca/static/js/app.18fc775a.chunk.js.map",
     "runtime~app.js": "/mexteca/static/js/runtime~app.398c2092.js",
     "runtime~app.js.map": "/mexteca/static/js/runtime~app.398c2092.js.map",
-    "static/js/2.8189854c.chunk.js": "/mexteca/static/js/2.8189854c.chunk.js",
-    "static/js/2.8189854c.chunk.js.map": "/mexteca/static/js/2.8189854c.chunk.js.map",
+    "static/js/2.a0281aa2.chunk.js": "/mexteca/static/js/2.a0281aa2.chunk.js",
+    "static/js/2.a0281aa2.chunk.js.map": "/mexteca/static/js/2.a0281aa2.chunk.js.map",
     "favicon-16.png": "/mexteca/favicon-16.png",
     "favicon-32.png": "/mexteca/favicon-32.png",
     "favicon.ico": "/mexteca/favicon.ico",
@@ -13,11 +13,12 @@
     "logo.png": "/mexteca/logo.png",
     "manifest.json": "/mexteca/manifest.json",
     "serve.json": "/mexteca/serve.json",
-    "static/js/2.8189854c.chunk.js.LICENSE.txt": "/mexteca/static/js/2.8189854c.chunk.js.LICENSE.txt"
+    "static/js/2.a0281aa2.chunk.js.LICENSE.txt": "/mexteca/static/js/2.a0281aa2.chunk.js.LICENSE.txt",
+    "static/media/mexiquense.jpg": "/mexteca/static/media/mexiquense.ce6cc1de.jpg"
   },
   "entrypoints": [
     "static/js/runtime~app.398c2092.js",
-    "static/js/2.8189854c.chunk.js",
-    "static/js/app.b78aaa28.chunk.js"
+    "static/js/2.a0281aa2.chunk.js",
+    "static/js/app.18fc775a.chunk.js"
   ]
 }
