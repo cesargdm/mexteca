@@ -22,6 +22,8 @@ axiosRetry(axios, { retries: 5, retryDelay: exponentialDelay })
 async function savePresentations({ client, presentations }) {
   const presentationSaves = presentations.map((presentation) => {
     return async () => {
+      if (!presentation) return
+
       process.stdout.write(
         chalk.gray(
           `Getting movie ${presentation.movie.title}, ${presentation.movie.year}`,
@@ -87,13 +89,14 @@ async function savePresentations({ client, presentations }) {
         presentation.movie = existingMovie.id
       }
 
-      process.stdout.write(chalk.gray(`📝 `))
+      process.stdout.write(chalk.gray(`📝 \n`))
 
       const result = await client.from('presentations').insert({
         location: presentation.location,
         date: presentation.date,
         movie: presentation.movie,
         room: presentation.room,
+        isFreeEntry: presentation.isFreeEntry,
       })
 
       return result
@@ -124,7 +127,7 @@ async function main() {
     const results = await savePresentations({ client, presentations })
 
     const inserted = results.filter(
-      ({ status, value }) => status === 'fulfilled' && value !== 'EXISTING',
+      ({ status, value }) => status === 201,
     )?.length
 
     // eslint-disable-next-line no-console

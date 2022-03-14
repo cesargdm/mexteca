@@ -124,10 +124,12 @@ export async function scrapWebsiteData(url) {
     const dirtyDescription =
       presentationMetadata[presentationMetadata.length - 1]
 
-    const isFreeEntry = presentationNode
-      .find('.modal-body')
-      .text()
-      .match(/Entrada libre/i)
+    const isFreeEntry = Boolean(
+      presentationNode
+        .find('.modal-body')
+        .text()
+        .match(/Entrada libre/gi),
+    )
 
     const description =
       dirtyDescription.length > MIN_DESCRIPTION_LENGTH

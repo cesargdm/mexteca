@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   useWindowDimensions,
 } from 'react-native'
+import { BlurView } from 'expo-blur'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Star, ChevronLeft, ChevronRight } from 'react-native-feather'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -46,9 +47,11 @@ function Listing() {
         .from('notificationSettings')
         .insert({ token, all: true })
         .then(({ data }) => {
-          if (data)
+          if (data) {
             alert('Te avisaremos cuando se publiquen una nuevas funciones')
-          else alert('Hubo un problema al registrarte')
+          } else {
+            alert('Hubo un problema al registrarte')
+          }
         })
     })
   }
@@ -77,6 +80,37 @@ function Listing() {
     headerTitle = headerTitle.charAt(0).toUpperCase() + headerTitle.slice(1)
 
     navigation.setOptions({
+      headerRight() {
+        return (
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              style={{
+                padding: 5,
+                paddingRight: 6,
+                paddingLeft: 4,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderRadius: '50%',
+                marginRight: 5,
+              }}
+              onPress={() => setSelectedDate(addDays(selectedDate, -1))}
+            >
+              <ChevronLeft strokeWidth={4} width={20} height={20} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                padding: 5,
+                paddingRight: 4,
+                paddingLeft: 6,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderRadius: '50%',
+              }}
+              onPress={() => setSelectedDate(addDays(selectedDate, 1))}
+            >
+              <ChevronRight strokeWidth={4} width={20} height={20} />
+            </TouchableOpacity>
+          </View>
+        )
+      },
       headerTitle: () => (
         <View
           style={{
@@ -85,12 +119,6 @@ function Listing() {
             alignItems: 'center',
           }}
         >
-          <TouchableOpacity
-            style={{ padding: 5 }}
-            onPress={() => setSelectedDate(addDays(selectedDate, -1))}
-          >
-            <ChevronLeft strokeWidth={4} width={20} height={20} />
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => setSelectedDate(now)}>
             <Text
               style={{
@@ -104,16 +132,10 @@ function Listing() {
               {headerTitle}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ padding: 5 }}
-            onPress={() => setSelectedDate(addDays(selectedDate, 1))}
-          >
-            <ChevronRight strokeWidth={4} width={20} height={20} />
-          </TouchableOpacity>
         </View>
       ),
     })
-  }, [navigation, route, selectedDate])
+  }, [navigation, selectedDate])
 
   const fetchData = useCallback(async () => {
     setState({ error: null, data: null, loading: true })
@@ -126,6 +148,7 @@ function Listing() {
             id,
             date,
             room,
+            isFreeEntry,
             movie (
               id,
               title,
@@ -137,6 +160,7 @@ function Listing() {
             )
           `,
         )
+        .eq('location', (route.params as any).location)
         .order('date', { ascending: true })
         .gte('date', selectedDate.toISOString())
         .lte('date', endOfDay(selectedDate).toISOString())
@@ -189,7 +213,9 @@ function Listing() {
             resizeMode="cover"
             source={{ uri: presentation.movie.posterUrl }}
           >
-            <View
+            <BlurView
+              intensity={25}
+              tint="dark"
               style={{
                 padding: 5,
                 display: 'flex',
@@ -199,23 +225,24 @@ function Listing() {
             >
               <Text
                 style={{
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  fontWeight: '800',
                   fontSize: 10,
                   borderRadius: 4,
                   overflow: 'hidden',
                   color: 'white',
-                  padding: 2,
                   paddingHorizontal: 5,
+                  fontWeight: '700',
                 }}
               >
                 Sala {presentation.room}
               </Text>
+              <Text style={{ fontWeight: '900', color: 'white', fontSize: 10 }}>
+                {presentation.isFreeEntry ? 'Libre' : ''}
+              </Text>
               <Text
                 style={{
-                  fontWeight: '700',
-                  fontSize: 12,
+                  fontSize: 10,
                   color: 'white',
+                  fontWeight: '700',
                 }}
               >
                 {formatInTimeZone(
@@ -224,7 +251,19 @@ function Listing() {
                   'h:mm aaa',
                 )}
               </Text>
-            </View>
+            </BlurView>
+            <Text
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                fontWeight: '800',
+                opacity: 0.2,
+                fontSize: 8,
+              }}
+            >
+              {presentation.id}
+            </Text>
           </ImageBackground>
         </View>
 

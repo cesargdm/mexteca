@@ -5,7 +5,9 @@ import {
   ImageBackground,
   View,
   StatusBar,
+  StyleSheet,
 } from 'react-native'
+import { Clock, UserCheck, Star, Film } from 'react-native-feather'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { WebView } from 'react-native-webview'
 import { useRoute } from '@react-navigation/native'
@@ -80,7 +82,7 @@ function MovieScreen() {
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundColor: 'rgba(0,0,0,0.3)',
+              backgroundColor: 'rgba(0,0,0,0.4)',
               paddingTop: 50,
             }}
           />
@@ -98,40 +100,41 @@ function MovieScreen() {
             {data?.title}
           </Text>
         </ImageBackground>
-        <View style={{ padding: 20 }}>
+        <View style={styles.characteristicContainer}>
           {data?.director?.name && (
-            <Text style={{ color: 'black' }}>
-              <Text style={{ fontWeight: '800' }}>Dirección</Text>{' '}
-              {data?.director?.name}
-            </Text>
+            <View style={styles.characteristic}>
+              <Film color="black" style={styles.characteristicIcon} />
+              <Text
+                style={{
+                  fontWeight: '700',
+                  maxWidth: 80,
+                  textAlign: 'center',
+                }}
+              >
+                {data.director.name}
+              </Text>
+            </View>
           )}
-          <Text style={{ color: 'black' }}>
-            <Text style={{ fontWeight: '800' }}>Duración</Text> {data?.duration}{' '}
-            min
-          </Text>
-          <Text>Clasificación</Text>
-          <View
-            style={{
-              backgroundColor: 'black',
-              borderRadius: 4,
-              paddingHorizontal: 5,
-              paddingVertical: 2.5,
-              display: 'flex',
-              maxWidth: 40,
-            }}
-          >
+          <View style={styles.characteristic}>
+            <Clock color="black" style={styles.characteristicIcon} />
             <Text
-              style={{
-                color: 'white',
-                fontWeight: '700',
-                fontSize: 12,
-                textAlign: 'center',
-              }}
+              style={{ color: 'black', textAlign: 'center', fontWeight: '700' }}
             >
+              {data?.duration} min
+            </Text>
+          </View>
+          <View style={styles.characteristic}>
+            <UserCheck color="black" style={styles.characteristicIcon} />
+            <Text style={styles.classificationText}>
               {data?.classification}
             </Text>
           </View>
-          {/* <Text style={{ color: 'black' }}>{data?.tmdbRating}</Text> */}
+          {data?.tmdbRating ? (
+            <View style={styles.characteristic}>
+              <Star color="black" style={styles.characteristicIcon} />
+              <Text style={{ fontWeight: '700' }}>{data?.tmdbRating}</Text>
+            </View>
+          ) : null}
         </View>
 
         {data?.description ? (
@@ -202,7 +205,32 @@ function MovieScreen() {
   )
 }
 
+const styles = StyleSheet.create({
+  characteristicContainer: {
+    padding: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  characteristicIcon: { marginBottom: 5 },
+  characteristic: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  classificationText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 12,
+    textAlign: 'center',
+    backgroundColor: 'black',
+    padding: 1,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    overflow: 'hidden',
+  },
+})
+
 export default MovieScreen
-function setState(arg0: { error: null; data: null; loading: boolean }) {
-  throw new Error('Function not implemented.')
-}

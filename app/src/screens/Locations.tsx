@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const LOCATIONS = [
   {
+    id: 'mexiquense',
     title: 'Mexiquense',
     image: require('../assets/mexiquense.jpg'),
     address:
@@ -32,7 +33,9 @@ function LocationsScreen() {
       >
         <TouchableOpacity
           style={{ borderRadius: 15, overflow: 'hidden' }}
-          onPress={() => navigation.navigate('ListingsScreen')}
+          onPress={() =>
+            navigation.navigate('ListingsScreen', { location: item.id })
+          }
         >
           <ImageBackground
             style={{ width: '100%', height: 150 }}
