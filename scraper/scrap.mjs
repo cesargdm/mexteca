@@ -1,13 +1,15 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require('fs')
+import fs from 'fs'
 
-const axios = require('axios')
-const cheerio = require('cheerio')
-const { zonedTimeToUtc } = require('date-fns-tz')
+import axios from 'axios'
+import cheerio from 'cheerio'
+// eslint-disable-next-line import/default
+import dateFnsTz from 'date-fns-tz'
 
-const { getCleanText, SPANISH_MONTHS } = require('./utils')
+import { getCleanText, SPANISH_MONTHS } from './utils.mjs'
 
 const { NODE_ENV } = process.env
+
+const MIN_DESCRIPTION_LENGTH = 15
 
 /**
  * Scraps presentations with movie and director data from a given Cineteca URL
@@ -15,7 +17,7 @@ const { NODE_ENV } = process.env
  * @param {*} url
  * @returns
  */
-async function scrapWebsiteData(url) {
+export async function scrapWebsiteData(url) {
   // eslint-disable-next-line no-console
   console.log(`Scrapping ${url}`)
   // read cache from file
@@ -101,30 +103,48 @@ async function scrapWebsiteData(url) {
 
     const title = getCleanText(dirtyTitle)
 
-    const [, unparsedDay, unparsedMonth, time, dirtyDescription] =
-      presentationNode
-        .find('.modal-body span')
-        .filter(function () {
-          const el = $(this)
-          return typeof el.text() === 'string' && !el.children().length
-        })
-        .map(function () {
-          return $(this).text()
-        })
-        .toArray()
-    const description = getCleanText(dirtyDescription)
+    const presentationMetadata = presentationNode
+      .find('.modal-body span')
+      .filter(function () {
+        const element = $(this)
+        return (
+          !element.children().length &&
+          typeof element.text() === 'string' &&
+          element.text().trim() !== ''
+        )
+      })
+      .map(function () {
+        return $(this).text().trim()
+      })
+      .toArray()
+
+    const [, unparsedDay, unparsedMonth, time] = presentationMetadata
+
+    // The description will be likely the last element of the metadata
+    const dirtyDescription =
+      presentationMetadata[presentationMetadata.length - 1]
+
+    const isFreeEntry = presentationNode
+      .find('.modal-body')
+      .text()
+      .match(/Entrada libre/i)
+
+    const description =
+      dirtyDescription.length > MIN_DESCRIPTION_LENGTH
+        ? getCleanText(dirtyDescription)
+        : ''
 
     // presentation date
     const monthIndex = SPANISH_MONTHS.findIndex((spanishMonth) =>
-      unparsedMonth.includes(spanishMonth),
+      unparsedMonth?.includes(spanishMonth),
     )
 
     const trailerUrl = presentationNode.find('.modal-body iframe').attr('src')
 
     // retrieve the iso date for the presentation
-    const day = parseInt(unparsedDay.trim())
+    const day = parseInt(unparsedDay)
     const [, hourString, minuteString] =
-      time.match(/([0-9]{1,2}):([0-9]{2})/) ?? []
+      time?.match(/([0-9]{1,2}):([0-9]{2})/) ?? []
 
     // parse values
     const year = Number(yearString)
@@ -146,14 +166,16 @@ async function scrapWebsiteData(url) {
       console.log(
         `Could not parse date for ${localizedTitle} ${localPresentationDate} with values: ${monthIndex} (month) ${day}, ${hour}:${minute}`,
       )
+
+      console.log(presentationMetadata)
+
       return
     }
 
     // create date with timezone
-    const date = zonedTimeToUtc(
-      localPresentationDate,
-      'America/Mexico_City',
-    ).toISOString()
+    const date = dateFnsTz
+      .zonedTimeToUtc(localPresentationDate, 'America/Mexico_City')
+      .toISOString()
 
     const room = generalPresentationsInfo.get(localizedTitle)
 
@@ -170,6 +192,7 @@ async function scrapWebsiteData(url) {
         trailerUrl,
         classification,
       },
+      isFreeEntry,
       date,
       room,
     })
@@ -193,5 +216,3 @@ async function scrapWebsiteData(url) {
 
   return presentations.concat(extraPresentations)
 }
-
-module.exports = { scrapWebsiteData }

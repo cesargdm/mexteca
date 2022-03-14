@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const axios = require('axios')
+import axios from 'axios'
 
 const { TMDB_KEY } = process.env
 
 const API_BASE = 'https://api.themoviedb.org/3'
 
-async function fetchMovieDetails(movie, client) {
+export async function fetchMovieDetails(movie, client) {
   // Get more info from tmdb
   const url = `${API_BASE}/search/movie?api_key=${TMDB_KEY}&query=${movie.title.replace(
     / /g,
@@ -63,7 +62,8 @@ async function fetchMovieDetails(movie, client) {
 
   return {
     ...movie,
-    title: tmdbData.orginal_title ?? movie.title,
+    title: movie.title,
+    originalTitle: tmdbData.orginal_title,
     duration: tmdbData.duration ?? movie.duration,
     tmdbId: tmdbData.id,
     posterUrl: `https://image.tmdb.org/t/p/original/${tmdbData.poster_path}`,
@@ -71,5 +71,3 @@ async function fetchMovieDetails(movie, client) {
     description: tmdbData.overview || movie.description,
   }
 }
-
-module.exports = { fetchMovieDetails }

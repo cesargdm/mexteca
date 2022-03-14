@@ -1,8 +1,8 @@
-function getCleanText(string) {
+export function getCleanText(string = '') {
   return string.trim().replace(/\n/g, '').replace(/ {2,}/g, ' ')
 }
 
-const SPANISH_MONTHS = [
+export const SPANISH_MONTHS = [
   'enero',
   'febrero',
   'marzo',
@@ -16,5 +16,3 @@ const SPANISH_MONTHS = [
   'noviembre',
   'diciembre',
 ]
-
-module.exports = { getCleanText, SPANISH_MONTHS }

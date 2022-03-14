@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=\"production\" node main.js",
+    "start": "NODE_ENV=\"production\" node --experimental-modules main.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +22,7 @@
     "@supabase/supabase-js": "^1.30.0",
     "axios": "^0.25.0",
     "axios-retry": "^3.2.4",
+    "chalk": "5.0.1",
     "cheerio": "^1.0.0-rc.10",
     "date-fns-tz": "^1.2.2",
     "expo-server-sdk": "^3.6.0",

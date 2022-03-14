@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { Expo } = require('expo-server-sdk')
+import { Expo } from 'expo-server-sdk'
 
 const { EXPO_ACCESS_TOKEN } = process.env
 
 const expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
 
-async function sendNotifications({ client, insertedCount }) {
+export async function sendNotifications({ client, insertedCount }) {
   let { data: tokens } = await client
     .from('notificationSettings')
     .select('token')
@@ -58,5 +58,3 @@ async function sendNotifications({ client, insertedCount }) {
     }
   })()
 }
-
-module.exports = { sendNotifications }
